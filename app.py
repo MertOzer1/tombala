@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 
 def main():
     st.title("Bingo Tracker")
@@ -62,18 +63,17 @@ def add_sheet(sheets, called_numbers):
             save_data(sheets, called_numbers)
 
 
+
 def display_sheets(sheets, called_numbers):
     for index, sheet in enumerate(sheets):
         st.write(f"Bingo Sheet {index + 1}")
-        for i in range(0, len(sheet), 5):
-            cols = st.columns(5)
-            for j in range(5):
-                number = sheet[i + j]
-                # Highlight called numbers
-                if number in called_numbers:
-                    cols[j].markdown(f"<span style='color:red;'>{number}</span>", unsafe_allow_html=True)
-                else:
-                    cols[j].write(number)
+        # Create a DataFrame for each sheet
+        data = [sheet[i:i+5] for i in range(0, 15, 5)]  # Split sheet into rows
+        df = pd.DataFrame(data)
+        # Apply highlighting style
+        st.dataframe(df.style.applymap(lambda x: 'background-color: yellow' if x in called_numbers else ''))
+
+
 
 
 
